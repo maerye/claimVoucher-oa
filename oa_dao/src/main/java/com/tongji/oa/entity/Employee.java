@@ -11,6 +11,8 @@ public class Employee {
 
     private String post;
 
+    private Department department;
+
     public String getSn() {
         return sn;
     }
@@ -51,7 +53,7 @@ public class Employee {
         this.post = post;
     }
 
-    private Department department;
+
 
     public Department getDepartment() {
         return department;
