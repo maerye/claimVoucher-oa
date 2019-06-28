@@ -13,4 +13,5 @@ public interface EmployeeBiz {
     void edit(Employee employee);
     Employee get(String sn);
     List<Employee> getAll();
+
 }

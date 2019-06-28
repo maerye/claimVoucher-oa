@@ -3,6 +3,21 @@
 
 <mapper namespace="com.tongji.oa.dao.EmployeeDao">
 
+    <select id="getByDepartmentAndPos" resultMap="employee">
+        select e.*,d.sn d_sn,d.name d_name,d.address d_address
+        from employee e
+        left join department d on e.department_sn= d.sn
+        <where>
+            e.sn is not NULL
+            <if test="dsn!=null">
+              and  e.department_sn = #{dsn}
+            </if>
+            <if test="post!=null">
+              and  e.post = #{post}
+            </if>
+        </where>
+
+    </select>
     <select id="findBySn" parameterType="String" resultMap="employee">
         select e.*,d.sn d_sn,d.name d_name,d.address d_address
         from employee e left join department d on e.department_sn= d.sn

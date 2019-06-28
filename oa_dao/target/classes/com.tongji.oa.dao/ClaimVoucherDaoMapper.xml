@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tongji.oa.dao.ClaimVoucherDao">
+
+
+    <resultMap id="claimVoucher" type="ClaimVoucher">
+        <id column="id" property="id"/>
+        <result column="cause" property="cause"/>
+        <result column="create_sn" property="createSn"/>
+        <result column="create_time" property="createTime"/>
+        <result column="next_deal_sn" property="nextDealSn"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="status" property="status"/>
+        <association property="creater" column="create_sn" javaType="Employee" columnPrefix="c_">
+            <result column="name" property="name"/>
+            <result column="post" property="post"/>
+        </association>
+        <association property="dealer" column="next_deal_sn" javaType="Employee" columnPrefix="d_">
+            <result column="name" property="name"/>
+            <result column="post" property="post"/>
+        </association>
+    </resultMap>
+
+    <select id="getByCreateSn" resultMap="claimVoucher">
+        select cv.*,ce.name c_name,ce.post c_post,de.name d_name,de.post d_post
+        from claim_voucher cv
+        left join employee ce on cv.create_sn=ce.sn
+        left join employee de on cv.next_deal_sn = de.sn
+        where cv.create_sn = #{createSn}
+    </select>
+
+
+    <select id="getByDealerSn" resultMap="claimVoucher">
+        select cv.*,ce.name c_name,ce.post c_post,de.name d_name,de.post d_post
+        from claim_voucher cv
+        left join employee ce on cv.create_sn=ce.sn
+        left join employee de on cv.next_deal_sn = de.sn
+        where cv.next_deal_sn = #{nextDealSn}
+    </select>
+    <select id="getById" resultMap="claimVoucher" parameterType="Integer">
+        select cv.*,ce.name c_name,ce.post c_post,de.name d_name,de.post d_post
+        from claim_voucher cv
+            left join employee ce on cv.create_sn=ce.sn
+            left join employee de on cv.next_deal_sn = de.sn
+        where cv.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into claim_voucher
+         (cause,create_sn,create_time,next_deal_sn,total_amount,status)
+        values (#{cause},#{createSn},#{createTime},#{nextDealSn},#{totalAmount},#{status})
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from claim_voucher where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="Department">
+        update claim_voucher <set>
+        <if test="cause != null">
+            cause = #{cause},
+        </if>
+        <if test="createSn != null">
+            create_sn = #{createSn},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime},
+        </if>
+        <if test="nextDealSn != null">
+            next_deal_sn = #{nextDealSn},
+        </if>
+        <if test="totalAmount != null">
+            total_amount = #{totalAmount},
+        </if>
+        <if test="status != null">
+            status = #{status}
+        </if>
+     </set>
+        where id = #{id}
+    </update>
+
+
+</mapper>
